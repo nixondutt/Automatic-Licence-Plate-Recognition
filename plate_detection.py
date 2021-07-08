@@ -419,155 +419,157 @@ def run_video(video = None, img_path=None, input_dir=None):
         #     continue
         #end
         # img = resize_keepratio(img,w= 1280,h=None)
-        if ret:
-            while True:
-                ret, img = cap.read()
-                print("Next frame")
-                im,_ = array_to_image(img)
-                rgbgr_image(im)
-                predict_image(net,im)
-                # print("\nimg shape ",img.shape)
-                dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
-                num = pnum[0]
-                if (nms): do_nms_obj(dets, num, meta.classes, nms)
-                ytext = 250
-                ypic = 0
-                num_plates =[]
-                for j in range(num):
-                    for i in range(meta.classes):
-                        if dets[j].prob[i] > 0:
-                            b = dets[j].bbox
-                            x1 = int(b.x - b.w/2.0)
-                            x2 = int(b.x + b.w/2.0)
-                            y1 = int(b.y - b.h/2.0)
-                            y2 = int(b.y + b.h/2.0)
-                            p1  = np.array((x1,y1))
-                            p2  = np.array((x2,y2)) 
-                            dst = np.sqrt(np.sum((p1-p2)**2))
-                            if(dst >100):
-                                score = dets[j].prob[i]
-                                cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
-                                detected = img[y1:y2,x1:x2] # vehicle
-                                # print("detected shape ",detected.shape)
-                                h,w = detected.shape[:2]
-                                if (h > 10 and w > 10):
-                                    vehi,_ = array_to_image(detected)
-                                    rgbgr_image(vehi)
-                                    predict_image(net_lp,vehi)
-                                    dets_lp = get_network_boxes(net_lp, vehi.w, vehi.h, thresh_lp, hier_thresh, None, 0, pnum_lp)
-                                    num_lp = pnum_lp[0]
-                                    if (nms_lp): 
-                                        do_nms_obj(dets_lp, num_lp, meta_lp.classes, nms_lp)
-                                    for j_lp in range(num_lp):                  
-                                        for i_lp in range(meta_lp.classes):                                
-                                            if dets_lp[j_lp].prob[i_lp] > 0:
-                                                bb = dets_lp[j_lp].bbox
-                                                xx1 = int(bb.x - bb.w/2.0)
-                                                xx2 = int(bb.x + bb.w/2.0)
-                                                yy1 = int(bb.y - bb.h/2.0)
-                                                yy2 = int(bb.y + bb.h/2.0)
-                                                p1  = np.array((xx1,yy1))
-                                                p2  = np.array((xx2,yy2)) 
-                                                np_score = dets_lp[j_lp].prob[i_lp]
-                                                dst_lp = np.sqrt(np.sum((p1-p2)**2))
-                                                if (dst_lp  > 45):
-                                                    num_plates.append([x1 + xx1, y1 + yy1, x1 + xx2, y1 +yy2, i_lp, np_score])
-                nms_numPlates = nms_over_class(num_plates, 0.1)
-                for numPlate in nms_numPlates: 
-                    xx1, yy1, xx2, yy2,_,_ = numPlate
-                    dst_lp = abs(xx2 - xx1)
-                    xx1 -= int (0.1*dst_lp)
-                    yy1 -= int (0.1*dst_lp)
-                    xx2 += int (0.15*dst_lp)
-                    yy2 += int (0.2*dst_lp)
-                    plate = img[yy1 : yy2, xx1 : xx2] #number plate
-                    try:
-                        #result = reader.readtext(plate)
-                        y0 = 0
-                        for res in result:
-                            draw_text(img, res[1],(150, y0+ytext-50))
-                        # cv2.putText(img,,, cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),2,cv2.LINE_AA)
-                            y0+=100
-                    except Exception as err:
-                        pass
-                    
-                    # print("result", result)
-                    # print("plate shape" ,plate.shape)
-                    cv2.rectangle(img,(xx1, yy1), (xx2, yy2), (0,255,0), 2)        
-                    num_detect=""
-                    num_im,_ = array_to_image(plate)
-                    rgbgr_image(num_im)
-                    predict_image(net_np,num_im)
-                    dets_np = get_network_boxes(net_np, num_im.w, num_im.h, thresh_np, hier_thresh, None, 0, pnum_np)
-                    num_np = pnum_np[0]
-                    if (dets_np):
-                        do_nms_obj(dets_np, num_np, meta_np.classes, nms)
-                    num_array = []
-                    for j_np in range(num_np):
-                        for i_np in range(meta_np.classes):
-                            if dets_np[j_np].prob[i_np] > 0:
-                                bbn = dets_np[j_np].bbox
-                                xn1 = int(bbn.x - bbn.w/2.0)
-                                xn2 = int(bbn.x + bbn.w/2.0)
-                                yn1 = int(bbn.y - bbn.h/2.0)
-                                yn2 = int(bbn.y + bbn.h/2.0)
-                                num_array.append((meta_np.names[i_np].decode('UTF-8'), xn1))
-                    num_array.sort(key= sortSecond)
-                    # print(num_array)
-                    # print(num_array[0][0])
+        if ret:            
+            im,_ = array_to_image(img)
+            rgbgr_image(im)
+            predict_image(net,im)
+            # print("\nimg shape ",img.shape)
+            dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
+            num = pnum[0]
+            if (nms): do_nms_obj(dets, num, meta.classes, nms)
+            ytext = 250
+            ypic = 0
+            num_plates =[]
+            for j in range(num):
+                for i in range(meta.classes):
+                    if dets[j].prob[i] > 0:
+                        b = dets[j].bbox
+                        x1 = int(b.x - b.w/2.0)
+                        x2 = int(b.x + b.w/2.0)
+                        y1 = int(b.y - b.h/2.0)
+                        y2 = int(b.y + b.h/2.0)
+                        p1  = np.array((x1,y1))
+                        p2  = np.array((x2,y2)) 
+                        dst = np.sqrt(np.sum((p1-p2)**2))
+                        if(dst >100):
+                            score = dets[j].prob[i]
+                            cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
+                            detected = img[y1:y2,x1:x2] # vehicle
+                            # print("detected shape ",detected.shape)
+                            h,w = detected.shape[:2]
+                            if (h > 10 and w > 10):
+                                vehi,_ = array_to_image(detected)
+                                rgbgr_image(vehi)
+                                predict_image(net_lp,vehi)
+                                dets_lp = get_network_boxes(net_lp, vehi.w, vehi.h, thresh_lp, hier_thresh, None, 0, pnum_lp)
+                                num_lp = pnum_lp[0]
+                                if (nms_lp): 
+                                    do_nms_obj(dets_lp, num_lp, meta_lp.classes, nms_lp)
+                                for j_lp in range(num_lp):                  
+                                    for i_lp in range(meta_lp.classes):                                
+                                        if dets_lp[j_lp].prob[i_lp] > 0:
+                                            bb = dets_lp[j_lp].bbox
+                                            xx1 = int(bb.x - bb.w/2.0)
+                                            xx2 = int(bb.x + bb.w/2.0)
+                                            yy1 = int(bb.y - bb.h/2.0)
+                                            yy2 = int(bb.y + bb.h/2.0)
+                                            p1  = np.array((xx1,yy1))
+                                            p2  = np.array((xx2,yy2)) 
+                                            np_score = dets_lp[j_lp].prob[i_lp]
+                                            dst_lp = np.sqrt(np.sum((p1-p2)**2))
+                                            if (dst_lp  > 45):
+                                                num_plates.append([x1 + xx1, y1 + yy1, x1 + xx2, y1 +yy2, i_lp, np_score])
+            nms_numPlates = nms_over_class(num_plates, 0.1)
+            for numPlate in nms_numPlates: 
+                xx1, yy1, xx2, yy2,_,_ = numPlate
+                dst_lp = abs(xx2 - xx1)
+                xx1 -= int (0.1*dst_lp)
+                yy1 -= int (0.1*dst_lp)
+                xx2 += int (0.15*dst_lp)
+                yy2 += int (0.2*dst_lp)
+                plate = img[yy1 : yy2, xx1 : xx2] #number plate
+                try:
+                    #result = reader.readtext(plate)
+                    y0 = 0
+                    for res in result:
+                        draw_text(img, res[1],(150, y0+ytext-50))
+                    # cv2.putText(img,,, cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255),2,cv2.LINE_AA)
+                        y0+=100
+                except Exception as err:
+                    pass
+                
+                # print("result", result)
+                # print("plate shape" ,plate.shape)
+                cv2.rectangle(img,(xx1, yy1), (xx2, yy2), (0,255,0), 2)        
+                num_detect=""
+                num_im,_ = array_to_image(plate)
+                rgbgr_image(num_im)
+                predict_image(net_np,num_im)
+                dets_np = get_network_boxes(net_np, num_im.w, num_im.h, thresh_np, hier_thresh, None, 0, pnum_np)
+                num_np = pnum_np[0]
+                if (dets_np):
+                    do_nms_obj(dets_np, num_np, meta_np.classes, nms)
+                num_array = []
+                for j_np in range(num_np):
+                    for i_np in range(meta_np.classes):
+                        if dets_np[j_np].prob[i_np] > 0:
+                            bbn = dets_np[j_np].bbox
+                            xn1 = int(bbn.x - bbn.w/2.0)
+                            xn2 = int(bbn.x + bbn.w/2.0)
+                            yn1 = int(bbn.y - bbn.h/2.0)
+                            yn2 = int(bbn.y + bbn.h/2.0)
+                            num_array.append((meta_np.names[i_np].decode('UTF-8'), xn1))
+                num_array.sort(key= sortSecond)
+                # print(num_array)
+                # print(num_array[0][0])
 
-                    for indx in range(len(num_array)):
-                        num_detect+=(num_array[indx][0])
-                    cv2.putText(img,num_detect,(xx1, yy1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255),2,cv2.LINE_AA)
-                    h,w,d = plate.shape
-                    if(h > 5 and w  > 5): 
-                        # print(w,h)
-                        try:
-                            plate = resize_keepratio(plate,h = 200,w =None)
-                            height,width = plate.shape[:2]
-                            #img[ypic:ypic+height,20:20+width] = plate
-                            # count_plate +=1
-                            # cv2.imwrite("./results/plates/"+str(count_plate)+".jpg", plate)
-                            # # print(ypic + height, ytext)
-                            ytext += 300
-                            ypic += 300
-                        except Exception as err:
-                            print("ypic", ypic)
-                            print("height", height)
-                            pass
-                #Chi
-                if img_path:
-                    cv2.imwrite(str(os.path.join(".","results",fileName)), img)
-                    break
-                elif video:
-                    video_cap.write(img)
-                    pc = int(count_frame/cap.get(cv2.CAP_PROP_FRAME_COUNT)*100)
-                    #print()
-                    print("="*pc+">", str(pc)+"%")
-                    # cv2.imwrite("./results/"+ videoName+"/"+str(count_frame)+".jpg", img)
-                    # cv2.namedWindow("output", cv2.WINDOW_NORMAL)
-                    # imS = cv2.resize(img, (1920, 1080))
-                    # cv2.imshow("output", imS)
-                    # cv2.waitKey(1)
-                elif input_dir and not cam:  # Nixon code
-                    cv2.imwrite(str(os.path.join(folder_path, file_name)), img)
-                else:
+                for indx in range(len(num_array)):
+                    num_detect+=(num_array[indx][0])
+                cv2.putText(img,num_detect,(xx1, yy1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255),2,cv2.LINE_AA)
+                h,w,d = plate.shape
+                if(h > 5 and w  > 5): 
+                    # print(w,h)
+                    try:
+                        plate = resize_keepratio(plate,h = 200,w =None)
+                        height,width = plate.shape[:2]
+                        #img[ypic:ypic+height,20:20+width] = plate
+                        # count_plate +=1
+                        # cv2.imwrite("./results/plates/"+str(count_plate)+".jpg", plate)
+                        # # print(ypic + height, ytext)
+                        ytext += 300
+                        ypic += 300
+                    except Exception as err:
+                        print("ypic", ypic)
+                        print("height", height)
+                        pass
+            #Chi
+            if img_path:
+                cv2.imwrite(str(os.path.join(".","results",fileName)), img)
+                while True:
                     cv2.imshow('frame', img)
-                    video_cap.write(img)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
+                cv2.destroyAllWindows()    
+                break
+            elif video:
+                video_cap.write(img)
+                pc = int(count_frame/cap.get(cv2.CAP_PROP_FRAME_COUNT)*100)
+                #print()
+                print("="*pc+">", str(pc)+"%")
+                # cv2.imwrite("./results/"+ videoName+"/"+str(count_frame)+".jpg", img)
+                # cv2.namedWindow("output", cv2.WINDOW_NORMAL)
+                # imS = cv2.resize(img, (1920, 1080))
+                # cv2.imshow("output", imS)
+                # cv2.waitKey(1)
+            elif input_dir and not cam:  # Nixon code
+                cv2.imwrite(str(os.path.join(folder_path, file_name)), img)
+            else:
+                cv2.imshow('frame', img)
+                video_cap.write(img)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
-                
-                #End Chi
-                # out.write(img)
-                # img = resize_keepratio(img,w=1280,h=None)
-                # cv2.imshow("img",img)
-                # k = cv2.waitKey(1)
-                # if k == 27:
-                #     exit()
-            cap.release()
+            
+            #End Chi
+            # out.write(img)
+            # img = resize_keepratio(img,w=1280,h=None)
+            # cv2.imshow("img",img)
+            # k = cv2.waitKey(1)
+            # if k == 27:
+            #     exit()
+            # cap.release()
             # Destroy all the windows
-            cv2.destroyAllWindows()
+            # cv2.destroyAllWindows()
         else:
             if video:
                 cap.release()

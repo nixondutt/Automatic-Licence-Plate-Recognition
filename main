@@ -2,6 +2,6 @@
 from plate_detection import run_video
 
 
-video = './short_video.mp4'
+img_path = './trial_lp.jpg'
 
-run_video(video)
+run_video(img_path = img_path)
