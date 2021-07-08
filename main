@@ -4,4 +4,9 @@ from plate_detection import run_video
 
 img_path = './trial_lp.jpg'
 
-run_video(img_path = img_path)
+img = run_video(img_path = img_path)
+while True:
+    cv2.imshow('frame', img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+cv2.destroyAllWindows() 

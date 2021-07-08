@@ -535,12 +535,7 @@ def run_video(video = None, img_path=None, input_dir=None):
             #Chi
             if img_path:
                 cv2.imwrite(str(os.path.join(".","results",fileName)), img)
-                while True:
-                    cv2.imshow('frame', img)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
-                        break
-                cv2.destroyAllWindows()    
-                break
+                return img   
             elif video:
                 video_cap.write(img)
                 pc = int(count_frame/cap.get(cv2.CAP_PROP_FRAME_COUNT)*100)
