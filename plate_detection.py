@@ -359,11 +359,11 @@ def run_video(video = None, img_path=None, input_dir=None):
 
     # cv2.namedWindow("img", cv2.WINDOW_NORMAL)
     else:
-        cap = cv2.VideoCapture('CAP_V4L2')
+        cap = cv2.VideoCapture(0)
         # videoName = os.path.basename(video)
-        # video_prefix,extention = os.path.splitext(videoName)
+        video_prefix,extention = os.path.splitext(videoName)
         # print("video prefix", video_prefix)
-        # # mkdir("./results/"+videoName)
+        mkdir("./results/"+videoName)
         # print("reading video: ",videoName)
         print("You dowg print debugging")
         count_frame = 0
