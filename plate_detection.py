@@ -393,8 +393,7 @@ def run_video(video = None, img_path=None, input_dir=None):
             img = cv2.imread(img_path)
         elif video or cap.isOpened:
             ret, img = cap.read()
-            print(img)
-            print("tried to print image there")
+            print("Printing the first frame")
             count_frame += 1
             if count_frame ==1:
                 height,width,layers=img.shape
@@ -423,6 +422,7 @@ def run_video(video = None, img_path=None, input_dir=None):
         if ret:
             while True:
                 ret, img = cap.read()
+                print("Next frame")
                 im,_ = array_to_image(img)
                 rgbgr_image(im)
                 predict_image(net,im)
