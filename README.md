@@ -1,5 +1,5 @@
 
-# Darknet #
+# ALPR #
 download and install Darknet, opencv, and other libraries to your enviroment
 prepare source videos, single images, or put images in 1 folder
 Run:
