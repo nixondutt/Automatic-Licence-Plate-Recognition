@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+from plate_detection import run_video
+
+
+video = './short_video.mp4'
+
+run_video(video)
