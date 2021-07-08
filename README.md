@@ -1,8 +1,17 @@
-![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
 # Darknet #
-Darknet is an open source neural network framework written in C and CUDA. It is fast, easy to install, and supports CPU and GPU computation.
+download and install Darknet, opencv, and other libraries to your enviroment
+prepare source videos, single images, or put images in 1 folder
+Run:
+``` 
+python plate_detection.py --img /path/to/single/image/file
+```
+```
+python plate_detection.py --video /path/to/video/file
+```
+```
+python plate_detection.py --dir /path/to/directory/contain/images
+```
+output image, output video, or output folder with the same name as input is located in the results folder
 
-For more information see the [Darknet project website](http://pjreddie.com/darknet).
-
-For questions or issues please use the [Google Group](https://groups.google.com/forum/#!forum/darknet).
+# U
