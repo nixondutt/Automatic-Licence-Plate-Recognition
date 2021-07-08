@@ -1,0 +1,5 @@
+classes= 4
+train  = /home/dungnb/workspaces/projects/cybercore/ncxx_traffic/darknet/ncxx/train.list
+valid  = /home/dungnb/workspaces/projects/cybercore/ncxx_traffic/darknet/ncxx/valid.list
+names = ./vehicle_det/ncxx.names
+backup = /home/dungnb/workspaces/projects/cybercore/ncxx_traffic/darknet/ncxx/checkpoints/
