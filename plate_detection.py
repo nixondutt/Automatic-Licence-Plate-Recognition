@@ -287,7 +287,7 @@ def nms_over_class(boxs, nms_thresh):
 
 def run_video(video = None, img_path=None, input_dir=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--thresh",help="confidence threshold",default= 0.01,type = float)
+    parser.add_argument("--thresh",help="confidence threshold",default= 0.5,type = float)
     parser.add_argument("--weight","-w",default="./vehicle_det/checkpoints/ncxx.backup",type = str,help="weights file to load")
     parser.add_argument("--video","-v",default ="", type = str,help="path to video file")
     parser.add_argument("--img","-img",type = str,help="path to image file")
@@ -446,7 +446,7 @@ def run_video(video = None, img_path=None, input_dir=None):
                             dst = np.sqrt(np.sum((p1-p2)**2))
                             if(dst >100):
                                 score = dets[j].prob[i]
-                                # cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
+                                cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
                                 detected = img[y1:y2,x1:x2] # vehicle
                                 # print("detected shape ",detected.shape)
                                 h,w = detected.shape[:2]
