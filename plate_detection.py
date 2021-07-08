@@ -397,7 +397,7 @@ def run_video(video = None, img_path=None, input_dir=None):
             print("tried to print image there")
             count_frame += 1
             if count_frame ==1:
-                # height,width,layers=img.shape
+                height,width,layers=img.shape
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
                 fps = cap.get(cv2.CAP_PROP_FPS)
                 video_cap=cv2.VideoWriter("./results/"+"output_video"+".avi",fourcc,fps,(width,height))
@@ -549,7 +549,7 @@ def run_video(video = None, img_path=None, input_dir=None):
                     # imS = cv2.resize(img, (1920, 1080))
                     # cv2.imshow("output", imS)
                     # cv2.waitKey(1)
-                elif input_dir:
+                elif input_dir and not cam:  # Nixon code
                     cv2.imwrite(str(os.path.join(folder_path, file_name)), img)
                 else:
                     cv2.imshow('frame', img)
