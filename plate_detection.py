@@ -361,9 +361,9 @@ def run_video(video = None, img_path=None, input_dir=None):
     else:
         cap = cv2.VideoCapture(0)
         # videoName = os.path.basename(video)
-        video_prefix,extention = os.path.splitext(videoName)
+        # video_prefix,extention = os.path.splitext(videoName)
         # print("video prefix", video_prefix)
-        mkdir("./results/"+videoName)
+        # mkdir("./results/"+videoName)
         # print("reading video: ",videoName)
         print("You dowg print debugging")
         count_frame = 0
@@ -400,7 +400,7 @@ def run_video(video = None, img_path=None, input_dir=None):
                 # height,width,layers=img.shape
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
                 fps = cap.get(cv2.CAP_PROP_FPS)
-                video_cap=cv2.VideoWriter("./results/"+video_prefix+".avi",fourcc,fps,(width,height))
+                video_cap=cv2.VideoWriter("./results/"+"output_video"+".avi",fourcc,fps,(width,height))
         elif input_dir:
             ret = True
             if count_index > len(files_list)-1:
