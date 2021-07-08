@@ -446,7 +446,7 @@ def run_video(video = None, img_path=None, input_dir=None):
                             dst = np.sqrt(np.sum((p1-p2)**2))
                             if(dst >100):
                                 score = dets[j].prob[i]
-                                cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
+                                # cv2.rectangle(img,(x1,y1),(x2,y2),(0,0,255),2)    ## draw rectangel to the vehicle 
                                 detected = img[y1:y2,x1:x2] # vehicle
                                 # print("detected shape ",detected.shape)
                                 h,w = detected.shape[:2]
